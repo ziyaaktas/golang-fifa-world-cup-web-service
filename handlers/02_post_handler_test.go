@@ -23,6 +23,21 @@ func TestAddNewWinnerHandlerReturnsUnauthorizedForInvalidAccessToken(t *testing.
 	}
 }
 
+func TestAddNewWinnerHandlerReturnsCreatedForValidAccessToken(t *testing.T) {
+	var jsonStr = []byte(`{"country":"Croatia", "year": 2030}`)
+	req, _ := http.NewRequest("POST", "/winners", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-ACCESS-TOKEN", data.AccessToken)
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(AddNewWinner)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusCreated {
+		t.Error("Did not return status 201 - Created for valid Access Token")
+	}
+}
+
 func TestAddNewWinnerHandlerAddsNewWinnerWithValidData(t *testing.T) {
 	setup()
 
