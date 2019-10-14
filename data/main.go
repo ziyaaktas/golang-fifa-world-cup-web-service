@@ -131,14 +131,14 @@ func PrintUsage() {
 	
 	POSTing with NO access token:
 	
-	curl -i -X POST \
-	-d '{"country":"Croatia", "year": 2030}' http://localhost:8000/winners
+	curl -i -X POST %NEXTLINE%
+	-d "{\"country\":\"Croatia\", \"year\": 2030}" http://localhost:8000/winners
 	
 	POSTing with valid access token:
 	
-	curl -i -X POST \
-	-H "X-ACCESS-TOKEN: %TOKEN%" \
-	-d '{"country":"Croatia", "year": 2030}' http://localhost:8000/winners
+	curl -i -X POST %NEXTLINE%
+	-H "X-ACCESS-TOKEN: %TOKEN%" %NEXTLINE%
+	-d "{\"country\":\"Croatia\", \"year\": 2030}" http://localhost:8000/winners
 	
 	Then check for the newly added winner
 	
@@ -146,13 +146,18 @@ func PrintUsage() {
 	
 	POSTing with invalid data:
 
-	curl -i -X POST \
-	-H "X-ACCESS-TOKEN: %TOKEN%" \
-	-d '{"country":"Russia", "year": 1984}' http://localhost:8000/winners
+	curl -i -X POST %NEXTLINE%
+	-H "X-ACCESS-TOKEN: %TOKEN%" %NEXTLINE%
+	-d "{\"country\":\"Russia\", \"year\": 1984}" http://localhost:8000/winners
 	
 	POSTing with invalid method:
 	
-	curl -i -X PUT -d '{"country":"Russia", "year": 2030}' http://localhost:8000/winners`
+	curl -i -X PUT -d "{\"country\":\"Russia\", \"year\": 2030}" http://localhost:8000/winners`
 
-	fmt.Println(strings.ReplaceAll(usage, "%TOKEN%", AccessToken))
+	usage = strings.ReplaceAll(usage, "%TOKEN%", AccessToken)
+	if runtime.GOOS == "windows" {
+		fmt.Println(strings.ReplaceAll(usage, "%NEXTLINE%", "^"))
+	} else {
+		fmt.Println(strings.ReplaceAll(usage, "%NEXTLINE%", "\\"))
+	}
 }
